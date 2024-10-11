@@ -6,7 +6,7 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server,{
   cors: {
-    origin: 'https://tempchats.onrender.com/',
+    origin: 'https://tempchats.onrender.com',
     methods: ['GET', 'POST'],
     credentials: true,
 },
@@ -15,7 +15,7 @@ const io = new Server(server,{
 //TODO: Add socket.io middleware
 
 const corsOptions = {
-  origin: "https://tempchats.onrender.com/",
+  origin: "https://tempchats.onrender.com",
   methods: ["GET", "POST"],
   credentials: true,
 };
