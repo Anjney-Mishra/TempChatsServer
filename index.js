@@ -8,7 +8,13 @@ const io = new Server(server);
 
 //TODO: Add socket.io middleware
 
-app.use(cors());
+const corsOptions = {
+  origin: "https://tempchats.onrender.com/",
+  credentials: true,
+  optionSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
