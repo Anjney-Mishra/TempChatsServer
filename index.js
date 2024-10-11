@@ -10,8 +10,8 @@ const io = new Server(server);
 
 const corsOptions = {
   origin: "https://tempchats.onrender.com/",
+  methods: ["GET", "POST"],
   credentials: true,
-  optionSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
