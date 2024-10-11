@@ -4,7 +4,13 @@ const { Server } = require("socket.io");
 const cors = require("cors");
 const app = express();
 const server = createServer(app);
-const io = new Server(server);
+const io = new Server(server,{
+  cors: {
+    origin: 'https://tempchats.onrender.com/',
+    methods: ['GET', 'POST'],
+    credentials: true,
+},
+});
 
 //TODO: Add socket.io middleware
 
