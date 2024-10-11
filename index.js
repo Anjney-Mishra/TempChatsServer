@@ -43,7 +43,10 @@ io.on("connection", (socket) => {
     io.to(data.room).emit("response", data); //send to particular socket by using their socket id as roomid
   });
 
-  socket.on("disconnect", () => {
+  socket.on("disconnect", ({roomId,name}) => {
+    const roomSize = io.sockets.adapter.rooms.get(roomId)?.size || 0;
+    io.in(roomId).emit("roomsize", roomSize);
+    socket.to(roomId).emit(`${name} left the room`);
     console.log("User disconnected: ", socket.id);
   });
 });
