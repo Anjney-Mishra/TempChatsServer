@@ -29,12 +29,18 @@ app.get("/", (req, res) => {
 io.on("connection", (socket) => {
   console.log("User connected: ", socket.id);
 
+  let currRoom = null;
+  let currName = null;
+
   socket.on("joinRoom", ({ roomId, name }) => {
+    currRoom = roomId;
+    currName = name;
     console.log(`${socket.id} User joined room: `, roomId);
     socket.join(roomId);
     const roomSize = io.sockets.adapter.rooms.get(roomId)?.size || 0;
     socket.to(roomId).emit("userjoined", { name, roomSize });
     io.in(roomId).emit("roomsize", roomSize);
+    socket.emit("joinedRoom",{roomId,roomSize});
   });
 
   socket.on("message", (data) => {
@@ -43,12 +49,16 @@ io.on("connection", (socket) => {
     io.to(data.room).emit("response", data); //send to particular socket by using their socket id as roomid
   });
 
-  socket.on("disconnect", ({roomId,name}) => {
-    const roomSize = io.sockets.adapter.rooms.get(roomId)?.size || 0;
-    io.in(roomId).emit("roomsize", roomSize);
-    socket.to(roomId).emit(`${name} left the room`);
+
+  socket.on("disconnect", () => {
+    if(currRoom){
+      const roomSize = io.sockets.adapter.rooms.get(currRoom)?.size || 0;
+      socket.to(currRoom).emit("UserLeft",{leftname:currName,roomSize});
+      io.in(currRoom).emit("roomsize", roomSize);
+    }
     console.log("User disconnected: ", socket.id);
   });
+
 });
 
 server.listen(3000, () => {
